@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Vigie · Retour à l'application</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<h1>Autorisation terminée</h1>
+<p id="msg">Retour à Vigie…</p>
+<p><a id="back" class="btn" href="#">Revenir à Vigie</a></p>
+<p class="muted">Cette page ne conserve rien : elle transmet seulement le code temporaire de la banque à l'application installée sur ce téléphone.</p>
+</main>
+<script>
+(function () {
+  var q = location.search || '';
+  var params = new URLSearchParams(q);
+  if (params.get('error')) {
+    document.getElementById('msg').textContent = "La banque a refusé ou annulé l'autorisation. Vous pouvez revenir à Vigie et réessayer.";
+  }
+  // Intent Android : ouvre Vigie (schéma vigie://auth) avec les paramètres reçus.
+  var intent = 'intent://auth' + q + '#Intent;scheme=vigie;package=io.github.dividoom.vigie;end';
+  var link = document.getElementById('back');
+  link.href = intent;
+  // Efface les paramètres de l'historique du navigateur.
+  try { history.replaceState(null, '', location.pathname); } catch (e) {}
+  setTimeout(function () { location.replace(intent); }, 150);
+})();
+</script>
+</body>
+</html>
